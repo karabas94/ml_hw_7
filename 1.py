@@ -65,6 +65,7 @@ input_shape = (X_train.shape[1],)
 model = keras.Sequential(
     [
         keras.Input(shape=input_shape),
+        layers.Dense(128, activation='relu'),
         layers.Dense(64, activation='relu'),
         layers.Dense(32, activation='relu'),
         layers.Dense(num_classes, activation='softmax')
@@ -76,16 +77,17 @@ optimizer = tf.keras.optimizers.Adam()
 
 model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',
-              metrics=['accuracy', 'precision', 'recall'])
+              metrics=['accuracy', 'precision', 'recall', 'f1_score'])
 
 # callbacks
 checkpoint = ModelCheckpoint("best_model.keras", monitor='val_loss', verbose=1, mode='min', save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', min_delta=1e-3, patience=5, verbose=1, mode='min',
                                restore_best_weights=True)
 # tensorboard = TensorBoard(log_dir='logs', histogram_freq=1)
+print("\n")
 
 # train model
-history = model.fit(X_train, y_train, epochs=30, callbacks=[
+history = model.fit(X_train, y_train, epochs=50, validation_data=(X_test, y_test), callbacks=[
     checkpoint,
     early_stopping,
     # tensorboard
