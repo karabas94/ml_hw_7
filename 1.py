@@ -76,25 +76,25 @@ optimizer = tf.keras.optimizers.Adam()
 
 model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',
-              metrics=['accuracy', 'precision', 'recall', 'f1-score'])
+              metrics=['accuracy', 'precision', 'recall'])
 
 # callbacks
 checkpoint = ModelCheckpoint("best_model.keras", monitor='val_loss', verbose=1, mode='min', save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', min_delta=1e-3, patience=5, verbose=1, mode='min',
                                restore_best_weights=True)
-tensorboard = TensorBoard(log_dir="logs", histogram_freq=1)
+# tensorboard = TensorBoard(log_dir='logs', histogram_freq=1)
 
 # train model
 history = model.fit(X_train, y_train, epochs=30, callbacks=[
     checkpoint,
     early_stopping,
-    tensorboard
+    # tensorboard
 ])
 
 # testing model with test data set
-test_loss, test_acc = model.evaluate(X_test, y_test, verbose=1)
-print(f'Test loss: {test_loss:}')
-print(f'Test Accuracy: {test_acc}')
+score = model.evaluate(X_test, y_test, verbose=1)
+print(f'Test loss: {score[0]}')
+print(f'Test Accuracy: {score[1]}')
 
 # saving best model
-model.save("final_model.h5")
+model.save("final_model.keras")
