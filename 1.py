@@ -3,10 +3,23 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import mlflow.keras
 from tensorflow import keras
 from tensorflow.keras import layers
-import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
+
+"""
+побудувати модель багатокласової класифікації за допомогою keras
+виконання має включати
+    препроцесинг датасету
+    розбиття трейн/тест
+    побудова моделі керас
+    callback на збереження найкращої моделі
+    візуалізація процесу навчання за допомогою тензорборд
+    EarlyStopping якщо зміна лосу на valid датасеті менша, ніж 1e-3
+    тестування моделі на тестовому датасеті
+    збереження кращої моделі
+"""
 
 data = pd.read_csv('WineQT.csv')
 
@@ -77,14 +90,17 @@ optimizer = tf.keras.optimizers.Adam()
 
 model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',
-              metrics=['accuracy', 'precision', 'recall', 'f1_score'])
+              metrics=['accuracy', 'precision', 'recall'])
 
 # callbacks
 checkpoint = ModelCheckpoint("best_model.keras", monitor='val_loss', verbose=1, mode='min', save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', min_delta=1e-3, patience=5, verbose=1, mode='min',
                                restore_best_weights=True)
-# tensorboard = TensorBoard(log_dir='logs', histogram_freq=1)
+# tensorboard = TensorBoard(log_dir='D:/logs', histogram_freq=1)
 print("\n")
+
+# visualization with mlflow
+mlflow.keras.autolog()
 
 # train model
 history = model.fit(X_train, y_train, epochs=50, validation_data=(X_test, y_test), callbacks=[
