@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
@@ -66,11 +65,11 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-num_classes = 9
+num_classes = 6
 
 # convert class vectors to binary class matrices
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+y_train = keras.utils.to_categorical(y_train - 3, num_classes)
+y_test = keras.utils.to_categorical(y_test - 3, num_classes)
 
 input_shape = (X_train.shape[1],)
 

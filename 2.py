@@ -1,9 +1,6 @@
 import keras
 import pandas as pd
-import numpy as np
-import mlflow.keras
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
 import tensorflow as tf
 from tensorflow.keras import layers
 from sklearn.preprocessing import StandardScaler
@@ -70,7 +67,7 @@ model = keras.Sequential(
 
 # loss
 def loss(y_true, y_pred):
-    mse = tf.keras.losses.mean_squared_error(y_true, y_pred)
+    mse = keras.losses.mean_squared_error(y_true, y_pred)
     return 10 * mse
 
 
